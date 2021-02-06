@@ -38,6 +38,7 @@ THE SOFTWARE.
 
 
 import time
+import sys
 import grovepi
 
 # Connect the Grove Rotary Angle Sensor to analog port A0
@@ -119,12 +120,13 @@ def setText_norefresh(text):
         count += 1
         bus.write_byte_data(DISPLAY_TEXT_ADDR,0x40,ord(c))
 while True:
+    setText("Potentiometer value")
     try:
         # Read sensor value from potentiometer
         sensor_value = grovepi.analogRead(potentiometer)
         setText("Potentiometer value\n{}".format(str(sensor_value)))
         # Calculate voltage
-    
+
         voltage = round((float)(sensor_value) * adc_ref / 1023, 2)
 
         # Calculate rotation in degrees (0 to 300)
