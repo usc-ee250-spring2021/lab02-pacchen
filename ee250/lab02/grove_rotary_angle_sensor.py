@@ -41,6 +41,17 @@ import time
 import sys
 import grovepi
 
+if sys.platform == 'uwp':
+    import winrt_smbus as smbus
+    bus = smbus.SMBus(1)
+else:
+    import smbus
+    import RPi.GPIO as GPIO
+    rev = GPIO.RPI_REVISION
+    if rev == 2 or rev == 3:
+        bus = smbus.SMBus(1)
+    else:
+        bus = smbus.SMBus(0)
 # Connect the Grove Rotary Angle Sensor to analog port A0
 # SIG,NC,VCC,GND
 potentiometer = 0
