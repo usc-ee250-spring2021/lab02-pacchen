@@ -122,8 +122,9 @@ while True:
     try:
         # Read sensor value from potentiometer
         sensor_value = grovepi.analogRead(potentiometer)
-        setText("Potentiometer value\n{}".format(str(sensor_value))
+        setText("Potentiometer value\n{}".format(str(sensor_value)))
         # Calculate voltage
+    
         voltage = round((float)(sensor_value) * adc_ref / 1023, 2)
 
         # Calculate rotation in degrees (0 to 300)
@@ -135,7 +136,7 @@ while True:
         # Give PWM output to LED
         grovepi.analogWrite(led,brightness)
 
-        print("sensor_value = %d voltage = %.2f degrees = %.1f brightness = %d" %(sensor_value, voltage, degrees, brightness))
+        print("sensor_value = %.2f degrees = %.1f brightness = %d" %(sensor_value, voltage, degrees, brightness))
     except KeyboardInterrupt:
         grovepi.analogWrite(led,0)
         break
