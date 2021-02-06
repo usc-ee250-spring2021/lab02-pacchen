@@ -122,7 +122,7 @@ while True:
     try:
         # Read sensor value from potentiometer
         sensor_value = grovepi.analogRead(potentiometer)
-
+        setText("Potentiometer value\n{}".format(str(sensor_value))
         # Calculate voltage
         voltage = round((float)(sensor_value) * adc_ref / 1023, 2)
 
