@@ -130,8 +130,9 @@ def setText_norefresh(text):
                 continue
         count += 1
         bus.write_byte_data(DISPLAY_TEXT_ADDR,0x40,ord(c))
+setText("Potentiometer:")
 while True:
-    setText("Potentiometer:")
+
     try:
         # Read sensor value from potentiometer
         sensor_value = grovepi.analogRead(potentiometer)
