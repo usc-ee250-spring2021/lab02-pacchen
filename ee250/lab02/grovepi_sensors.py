@@ -31,6 +31,26 @@ sys.path.append('../../Software/Python/grove_rgb_lcd')
 
 import grovepi
 
+#setting up potentiometer
+potentiometer = 0
+grovepi.pinMode(potentiometer,"INPUT")
+time.sleep(1)
+
+#LCD
+DISPLAY_RGB_ADDR = 0x62
+DISPLAY_TEXT_ADDR = 0x3e
+
+if sys.platform == 'uwp':
+    import winrt_smbus as smbus
+    bus = smbus.SMBus(1)
+else:
+    import smbus
+    import RPi.GPIO as GPIO
+    rev = GPIO.RPI_REVISION
+    if rev == 2 or rev == 3:
+        bus = smbus.SMBus(1)
+    else:
+        bus = smbus.SMBus(0)
 """This if-statement checks if you are running this python file directly. That
 is, if you run `python3 grovepi_sensors.py` in terminal, this if-statement will
 be true"""
@@ -92,11 +112,40 @@ def setText_norefresh(text):
 
 if __name__ == '__main__':
     PORT = 4    # D4
-
+    Threshold = 0;
+    sensor_value = grovepi.analogRead(potentiometer)
+    sensor_v = 0;
+    setRGB(255,255,255)
+    status = "";
     while True:
 
         #So we do not poll the sensors too quickly which may introduce noise,
         #sleep for a reasonable time of 200ms between each iteration.
-        time.sleep(0.2)
+        time.sleep(0.1)
+        #gather data
+        sensor_value = grovepi.analogRead(potentiometer)
+        ultra_dis = grovepi.ultrasonicRead(PORT)
+
+            
+        #as potentiometer won't stay in one same value
+        if (abs(sensor_value - sensor_v) >2):
+            Threshold = round(float(sensor_value) /1023*517)
+            setText_norefresh("{:>3}CM {}".format(str(Threshold),status))
+            sensor_v = sensor_value
         
-        print(grovepi.ultrasonicRead(PORT))
+        #ultra_dis max 495 for me
+        if (Threshold > ultra_dis and status == ""):
+            setRGB(255,0,0)
+            status = "OBJ PRES"
+            setText_norefresh("{:>3}CM {}".format(str(Threshold),status))
+        elif (Threshold < ultra_dis and status == "OBJ PRES"):
+            setRGB(255,255,255)
+            status = ""
+            setText_norefresh("{:>3}CM {}".format(str(Threshold),status))
+
+
+
+        #displaying second row
+        setText_norefresh("\n{:>3}CM".format(str(ultra_dis)))
+        
+        print("sensor_value = %d ultra_dis = %d Threshold = %d status " %(sensor_value, ultra_dis, Threshold)+status)

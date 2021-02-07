@@ -136,13 +136,13 @@ while True:
     try:
         # Read sensor value from potentiometer
         sensor_value = grovepi.analogRead(potentiometer)
-        setText_norefresh("Potentiometer:\n{}".format(str(sensor_value)))
+        setText_norefresh("Potentiometer:\n{} {}".format(str(sensor_value),"HI"))
         # Calculate voltage
 
         voltage = round((float)(sensor_value) * adc_ref / 1023, 2)
 
         # Calculate rotation in degrees (0 to 300)
-        degrees = round((voltage * full_angle) / grove_vcc, 2)
+        degrees = round((sensor_value*300/1023), 2)
 
         # Calculate LED brightess (0 to 255) from degrees (0 to 300)
         brightness = int(degrees / full_angle * 255)
