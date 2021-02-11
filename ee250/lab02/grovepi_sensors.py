@@ -94,7 +94,7 @@ if __name__ == '__main__':
 
         #So we do not poll the sensors too quickly which may introduce noise,
         #sleep for a reasonable time of 200ms between each iteration.
-        time.sleep(0.1)
+        time.sleep(0.2)
         #gather data
         sensor_value = grovepi.analogRead(potentiometer)
         ultra_dis = grovepi.ultrasonicRead(PORT)
@@ -102,7 +102,7 @@ if __name__ == '__main__':
             
         #as potentiometer won't stay in one same value
         if (abs(sensor_value - sensor_v) >2):
-            Threshold = round(float(sensor_value) /1023*517)
+            Threshold = int (round(float(sensor_value) /1023*517))
             setText_norefresh("{:>3}CM {}".format(str(Threshold),status))
             sensor_v = sensor_value
         
